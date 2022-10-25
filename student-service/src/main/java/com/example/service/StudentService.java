@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.entity.Student;
+import com.example.feignclient.AddressClient;
 import com.example.model.AddressResponse;
 import com.example.model.StudentRequest;
 import com.example.model.StudentResponse;
@@ -16,8 +17,11 @@ public class StudentService {
 	@Autowired
 	StudentRepository studentRepository;
 
+	/*@Autowired
+	WebClient webClient;*/
+
 	@Autowired
-	WebClient webClient;
+	AddressClient addressClient;
 
 	public StudentResponse createStudent(StudentRequest createStudentRequest) {
 		Student student = new Student();
@@ -28,19 +32,21 @@ public class StudentService {
 
 		student = studentRepository.save(student);
 		StudentResponse studentResponse = new StudentResponse(student);
-		studentResponse.setAddressResponse(getAddressById(student.getAddressId()));
+		//studentResponse.setAddressResponse(getAddressById(student.getAddressId()));
+		studentResponse.setAddressResponse(addressClient.getAddressById(student.getAddressId()));
 		return studentResponse;
 	}
 	
 	public StudentResponse getById (long id) {
 		Student student = studentRepository.findById(id).get();
 		StudentResponse studentResponse = new StudentResponse(student);
-		studentResponse.setAddressResponse(getAddressById(student.getAddressId()));
+		//studentResponse.setAddressResponse(getAddressById(student.getAddressId()));
+		studentResponse.setAddressResponse(addressClient.getAddressById(student.getAddressId()));
 		return studentResponse;
 	}
 
-	public AddressResponse getAddressById(long addressId) {
+	/*public AddressResponse getAddressById(long addressId) {
 		Mono<AddressResponse> mono = webClient.get().uri("/" + addressId).retrieve().bodyToMono(AddressResponse.class);
 		return mono.block();
-	}
+	}*/
 }
