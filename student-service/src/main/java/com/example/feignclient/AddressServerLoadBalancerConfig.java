@@ -1,3 +1,4 @@
+/*
 package com.example.feignclient;
 
 import feign.Feign;
@@ -14,3 +15,4 @@ public class AddressServerLoadBalancerConfig {
         return Feign.builder();
     }
 }
+*/
