@@ -6,6 +6,7 @@ import com.example.model.AddressResponse;
 import com.example.model.StudentRequest;
 import com.example.model.StudentResponse;
 import com.example.repository.StudentRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -23,6 +24,9 @@ public class StudentService {
 	@Autowired
 	AddressClient addressClient;
 
+	@Autowired
+	CommonService commonService;
+
 	public StudentResponse createStudent(StudentRequest createStudentRequest) {
 		Student student = new Student();
 		student.setFirstName(createStudentRequest.getFirstName());
@@ -32,16 +36,16 @@ public class StudentService {
 
 		student = studentRepository.save(student);
 		StudentResponse studentResponse = new StudentResponse(student);
-		//studentResponse.setAddressResponse(getAddressById(student.getAddressId()));
-		studentResponse.setAddressResponse(addressClient.getAddressById(student.getAddressId()));
+		studentResponse.setAddressResponse(commonService.getAddressById(student.getAddressId()));
+		//studentResponse.setAddressResponse(addressClient.getAddressById(student.getAddressId()));
 		return studentResponse;
 	}
 	
 	public StudentResponse getById (long id) {
 		Student student = studentRepository.findById(id).get();
 		StudentResponse studentResponse = new StudentResponse(student);
-		//studentResponse.setAddressResponse(getAddressById(student.getAddressId()));
-		studentResponse.setAddressResponse(addressClient.getAddressById(student.getAddressId()));
+		studentResponse.setAddressResponse(commonService.getAddressById(student.getAddressId()));
+		//studentResponse.setAddressResponse(addressClient.getAddressById(student.getAddressId()));
 		return studentResponse;
 	}
 

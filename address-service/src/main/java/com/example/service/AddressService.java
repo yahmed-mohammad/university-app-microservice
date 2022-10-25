@@ -27,6 +27,7 @@ public class AddressService {
     }
 
     public AddressResponse getAddressById(long id) {
+        System.out.println("Inside getAddressById");
         Optional<Address> addressOptional = addressRepository.findById(id);
         Address address= null;
         if(addressOptional.isPresent()) {
